@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <h1>Register</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+    {{ form_row(registrationForm.email) }}
+    {{ form_row(registrationForm.plainPassword, {
+        label: 'Password'
+    }) }}
+    {{ form_row(registrationForm.pais, {
+        label: 'País'
+    }) }}
+    {{ form_errors(registrationForm.pais) }} {# Muestra los errores del campo "pais" #}
+    {{ form_row(registrationForm.cp, {
+        label: 'Código Postal'
+    }) }}
+    {{ form_errors(registrationForm.cp) }} {# Muestra los errores del campo "cp" #}
+    {{ form_row(registrationForm.ciudad, {
+        label: 'Ciudad'
+    }) }}
+    {{ form_errors(registrationForm.ciudad) }} {# Muestra los errores del campo "ciudad" #}
+    {{ form_row(registrationForm.direccion, {
+        label: 'Dirección'
+    }) }}
+    {{ form_errors(registrationForm.direccion) }} {# Muestra los errores del campo "direccion" #}
+    {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_errors(registrationForm.agreeTerms) }} {# Muestra los errores del campo "agreeTerms" #}
+
+    <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
