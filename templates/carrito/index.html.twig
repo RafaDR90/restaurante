@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carrito{% endblock %}
+
+{% block body %}
+    <h1>Carrito</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in productos %}
+                <tr>
+                    <td>{{ item.getNombre() }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>
+                        <a href="{{ path('carrito_agregar', {'id': item.getId()}) }}" class="btn btn-primary">+</a>
+                        <a href="{{ path('carrito_quitar', {'id': item.getId()}) }}" class="btn btn-danger">-</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Total</td>
+                <td>{{ total }}</td>
+                <td>
+                    <a href="" class="btn btn-success">Pagar</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
