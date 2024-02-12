@@ -31,6 +31,7 @@ class CarritoController extends AbstractController
             //resta el stock de los productos
             foreach ($productos as $producto) {
                 $producto->setStock($producto->getStock() - $carrito[$producto->getId()]);
+                $producto->cantidad = $carrito[$producto->getId()];
                 //guarda los cambios en la base de datos
             }
             //guarda los cambios en la base de datos
@@ -39,7 +40,8 @@ class CarritoController extends AbstractController
             //vacía el carrito
             $session->set('cart', []);
             //envia el email
-            $emailController->sendEmail();
+            $htmlContent = $emailController->crearHTML($productos);
+            $emailController->sendEmail($htmlContent);
             return $this->redirectToRoute('app_carrito', ['exito' => 'Compra realizada con éxito']);
         }
     }
