@@ -7,14 +7,15 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Peso</th>
-                <th>Stock</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Peso</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for producto in productos %}
@@ -24,9 +25,11 @@
                 <td>{{ producto.descripcion }}</td>
                 <td>{{ producto.peso }}</td>
                 <td>{{ producto.stock }}</td>
+                <td>{{ producto.precio }}</td>
                 <td>
                     <a href="{{ path('app_productos_edit', {'id': producto.id, 'catId': catId}) }}">edit</a>
-                    <a href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al carrito</a>
+                    <a href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al
+                        carrito</a>
                 </td>
             </tr>
         {% else %}

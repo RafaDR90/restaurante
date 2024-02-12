@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 
 class ProductosType extends AbstractType
@@ -21,6 +22,7 @@ class ProductosType extends AbstractType
             ->add('descripcion')
             ->add('peso')
             ->add('stock')
+            ->add('precio', MoneyType::class)
             ->add('categoria', EntityType::class, [
                 'class' => Categorias::class,
                 'choice_label' => 'nombre', // Cambia 'id' al campo que deseas mostrar

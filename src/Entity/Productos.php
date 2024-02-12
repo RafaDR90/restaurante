@@ -24,6 +24,9 @@ class Productos
     #[ORM\Column]
     private ?float $peso = null;
 
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2)]
+    private ?float $precio = null;
+
     #[ORM\Column]
     private ?int $stock = null;
 
@@ -130,6 +133,17 @@ class Productos
                 $datosPedido->setProducto(null);
             }
         }
+
+        return $this;
+    }
+    public function getPrecio(): ?float
+    {
+        return $this->precio;
+    }
+
+    public function setPrecio(float $precio): static
+    {
+        $this->precio = $precio;
 
         return $this;
     }
