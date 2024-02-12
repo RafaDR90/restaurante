@@ -32,9 +32,14 @@ class CategoriasController extends AbstractController
     #[Route('/', name: 'app_categorias_index', methods: ['GET'])]
     public function index(CategoriasRepository $categoriasRepository): Response
     {
-        return $this->render('categorias/index.html.twig', [
-            'categorias' => $categoriasRepository->findAll(),
-        ]);
+        //si esta logueado
+        if($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')){
+            return $this->redirectToRoute('app_login');
+        }else{
+            return $this->render('categorias/index.html.twig', [
+                'categorias' => $categoriasRepository->findAll(),
+            ]);
+        }
     }
 
     #[Route('/new', name: 'app_categorias_new', methods: ['GET', 'POST'])]
