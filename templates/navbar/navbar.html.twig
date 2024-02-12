@@ -1,32 +1,45 @@
 {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <h3>Restaurante</h3>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <h2 class="text-light m-0">Restaurante</h2>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">Register</a>
-                    </li>
-                {% endif %}
+            <ul class="navbar-nav gap-5">
                 {% if is_granted('ROLE_USER') %}
                     <li>
-                        <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_categorias_index') }}">Categorias</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ path('app_categorias_index') }}">Categorias</a>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_carrito') }}">Carrito</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ path('app_carrito') }}">Carrito</a>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_logout') }}">Cerrar Sesión</a>
                     </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                    <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_login') }}">Iniciar Sesión</a>
                 </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_register') }}">Registrarse</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
     </nav>
 
     <style>
+
+        .navbar-nav li:hover {
+            transform: scale(1.2);
+        }
+        .navbar {
+            padding: 1rem 5rem;
+            background-color: darkblue !important;
+        }
+
+        .navbar-collapse {
+            justify-content: right;
+        }
+
     </style>
 {% endblock %}

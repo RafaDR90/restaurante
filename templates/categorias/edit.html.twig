@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Categorias{% endblock %}
+{% block title %}Editar Categorias{% endblock %}
 
 {% block body %}
-    <h1>Edit Categorias</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="text-center mb-0">Editar Categorias</h1>
+                    </div>
+                    <div class="card-body">
+                        {{ include('categorias/_form.html.twig', {'button_label': 'Actualizar'}) }}
+                        {{ include('categorias/_delete_form.html.twig', {'button_label': 'Borrar'}) }}
 
-    {{ include('categorias/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_categorias_index') }}">back to list</a>
-
-    {{ include('categorias/_delete_form.html.twig') }}
+                        <div class="text-center mt-4">
+                            <a href="{{ path('app_categorias_index') }}" class="btn btn-secondary">Volver Atrás</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

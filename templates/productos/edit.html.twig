@@ -1,13 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Productos{% endblock %}
+{% block title %}Editar Productos{% endblock %}
 
 {% block body %}
-    <h1>Edit Productos</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="text-center mb-0">Editar Productos</h1>
+                    </div>
+                    <div class="card-body">
+                        {{ include('productos/_form.html.twig', {'button_label': 'Actualizar'}) }}
+                        {{ include('productos/_delete_form.html.twig') }}
 
-    {{ include('productos/_form.html.twig', {'button_label': 'Update'}) }}
+                        <div class="text-center mt-4">
+                            <a href="{{ path('app_productos_index',{'catId': catId}) }}" class="btn btn-secondary">Volver Atrás</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('app_productos_index',{'catId': catId}) }}">back to list</a>
-
-    {{ include('productos/_delete_form.html.twig') }}
 {% endblock %}

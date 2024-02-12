@@ -3,7 +3,7 @@
 {% block title %}Carrito{% endblock %}
 
 {% block body %}
-    <h1>Carrito</h1>
+    <h1 class="text-center">Carrito</h1>
     <table class="table">
         <thead>
             <tr>
@@ -26,7 +26,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3">Total</td>
+                <td colspan="3"><b>Total</b></td>
                 <td>{{ total }}</td>
                 <td>
                     <a href="{{ path('carrito_comprar')}}" class="btn btn-success">Comprar</a>

@@ -1,4 +1,12 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<div class="form-group">
+    {{ form_label(form.nombre, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.nombre, {'attr': {'class': 'form-control form-control-lg', 'style': 'font-size: 16px'}}) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.descripcion, 'Descripción', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.descripcion, {'attr': {'class': 'form-control form-control-lg', 'style': 'font-size: 16px'}}) }}
+</div>
+{# Agrega más campos aquí si es necesario #}
+<button class="btn btn-primary">{{ button_label|default('Guardar') }}</button>
 {{ form_end(form) }}

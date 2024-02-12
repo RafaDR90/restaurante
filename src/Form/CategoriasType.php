@@ -14,6 +14,10 @@ class CategoriasType extends AbstractType
         $builder
             ->add('nombre')
             ->add('descripcion')
+            ->add('peso')
+            ->add('stock')
+            ->add('precio')
+            ->add('categoria')
         ;
     }
 

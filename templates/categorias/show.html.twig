@@ -22,9 +22,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_categorias_index') }}">back to list</a>
+    <a href="{{ path('app_categorias_index') }}">Volver Atrás</a>
 
-    <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">edit</a>
+    <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">Editar</a>
 
     {{ include('categorias/_delete_form.html.twig') }}
 {% endblock %}

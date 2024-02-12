@@ -3,18 +3,18 @@
 {% block title %}Productos {% endblock %}
 
 {% block body %}
-    <h1>{{ nombre }}</h1>
+    <h1 class="text-center">{{ nombre }}</h1>
 
     <table class="table">
         <thead>
         <tr>
             <th>Id</th>
             <th>Nombre</th>
-            <th>Descripcion</th>
+            <th>Descripción</th>
             <th>Peso</th>
             <th>Stock</th>
             <th>Precio</th>
-            <th>actions</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -27,8 +27,8 @@
                 <td>{{ producto.stock }}</td>
                 <td>{{ producto.precio }}</td>
                 <td>
-                    <a href="{{ path('app_productos_edit', {'id': producto.id, 'catId': catId}) }}">edit</a>
-                    <a href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al
+                    <a class="text-decoration-none text-dark fw-bold" href="{{ path('app_productos_edit', {'id': producto.id, 'catId': catId}) }}">Editar</a>
+                    <a class="text-decoration-none text-dark fw-bold" href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al
                         carrito</a>
                 </td>
             </tr>
@@ -40,5 +40,15 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_productos_new',{'catId': catId}) }}">Create new</a>
+   <div class="crearCategoria d-flex justify-content-center">
+        <a class="btn-primary p-2 rounded-2 text-decoration-none text-dark fw-bold fs-5" href="{{ path('app_productos_new',{'catId': catId}) }}">Crear nuevo producto</a>
+   </div>
+
+    <style>
+
+        .crearCategoria a:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 6px black;
+        }
+    </style>
 {% endblock %}

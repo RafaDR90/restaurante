@@ -3,7 +3,7 @@
 {% block title %}Categorias{% endblock %}
 
 {% block body %}
-    <h1>Categorias</h1>
+    <h1 class="text-center">Categorias</h1>
 
     <table class="table">
         <thead>
@@ -11,7 +11,7 @@
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Descripcion</th>
-                <th>Actions</th>
+                <th>Acciones</th>
 
             </tr>
         </thead>
@@ -22,8 +22,8 @@
                 <td>{{ categoria.nombre }}</td>
                 <td>{{ categoria.descripcion }}</td>
                 <td>
-                    <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">Editar</a>
-                    <a href="{{ path('app_categorias_acceso', {'id': categoria.id}) }}">Ver productos</a>
+                    <a class="text-decoration-none text-dark fw-bold" href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">Editar</a>
+                    <a class="text-decoration-none text-dark fw-bold" href="{{ path('app_categorias_acceso', {'id': categoria.id}) }}">Ver productos</a>
                 </td>
 
             </tr>
@@ -34,6 +34,16 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="crearCategoria d-flex justify-content-center">
+        <a class="btn-primary p-2 rounded-2 text-decoration-none text-dark fw-bold fs-5" href="{{ path('app_categorias_new') }}">Crear nueva categoría</a>
+    </div>
 
-    <a href="{{ path('app_categorias_new') }}" class="bg-primary">Create new</a>
+    <style>
+
+        .crearCategoria a:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 6px black;
+        }
+    </style>
+
 {% endblock %}
