@@ -42,6 +42,8 @@ class CarritoController extends AbstractController
             //envia el email
             $htmlContent = $emailController->crearHTML($productos);
             $emailController->sendEmail($htmlContent);
+            $htmlContentDepartamento = $emailController->crearHTMLDepartamento($productos);
+            $emailController->sendEmailDepartamento($htmlContentDepartamento);
             return $this->redirectToRoute('app_carrito', ['exito' => 'Compra realizada con éxito']);
         }
     }
@@ -62,9 +64,11 @@ class CarritoController extends AbstractController
 
         //obtiene los productos de la base de datos
         $productos = $productosRepository->findBy(['id' => $productos_id]);
+        $totalPrecio = 0;
         //añado a productos la cantidad de cada producto
         foreach ($productos as $producto) {
             $producto->cantidad = $carrito[$producto->getId()];
+            $totalPrecio += $producto->getPrecio() * $producto->cantidad;
         }
 
 
@@ -72,6 +76,7 @@ class CarritoController extends AbstractController
             'controller_name' => 'CarritoController',
             'productos' => $productos,
             'total' => $total,
+            'totalPrecio' => $totalPrecio,
         ]);
     }
 

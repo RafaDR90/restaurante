@@ -1,0 +1,5 @@
+- en la funcion comprar añadir a la base de datos el pedido en las tablas (pedidos y datos_pedido)
+
+- mostrar tus pedidos
+
+- mostrar todos los pedidos si eres admin
