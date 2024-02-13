@@ -10,6 +10,7 @@ use App\Entity\DatosPedido;
 use App\Repository\DatosPedidoRepository;
 use App\Repository\PedidosRepository;
 
+
 class PedidoController extends AbstractController
 {
     #[Route('/pedido', name: 'app_pedido')]
@@ -37,13 +38,27 @@ class PedidoController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+
         $pedidos = $pedidosRepository->findBy(['restaurante' => $this->getUser()]);
+
         foreach ($pedidos as $pedido) {
-            $pedido->productos = $datosPedidoRepository->findBy(['pedido' => $pedido->getId()]);
+            $productos = $datosPedidoRepository->findBy(['pedido' => $pedido->getId()]);
+            $pedido->productos = $productos;
         }
+        $totalPrecio = 0;
+        foreach ($pedidos as $pedido) {
+            foreach ($pedido->productos as $producto) {
+                $totalPrecio += $producto->getProducto()->getPrecio() * $producto->getUnidades();
+            }
+            $pedido->totalPrecio = $totalPrecio;
+            $totalPrecio = 0;
+        }
+
+
         return $this->render('pedido/misPedidos.html.twig', [
             'controller_name' => 'PedidoController',
             'pedidos' => $pedidos,
         ]);
     }
+
 }

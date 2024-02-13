@@ -1,20 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PedidoController!{% endblock %}
+{% block title %}Mis Pedidos{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
+    <div class="container">
+        <h1>Mis Pedidos</h1>
 
-    <div class="example-wrapper">
-        <h1>Hello miss fcking pedidos! ✅</h1>
-
-        This friendly message is coming from:
-        <ul>
-            <li>Your controller at <code>C:/xampp/htdocs/restaurante/src/Controller/PedidoController.php</code></li>
-            <li>Your template at <code>C:/xampp/htdocs/restaurante/templates/pedido/index.html.twig</code></li>
-        </ul>
+        {% if pedidos is empty %}
+            <p>No tienes ningún pedido.</p>
+        {% else %}
+            {% for pedido in pedidos %}
+                <h2>Pedido #{{ pedido.id }}</h2>
+                <p>Fecha: {{ pedido.fecha|date('Y-m-d') }}</p>
+                <p>Estado: {{ pedido.enviado ? 'Enviado' : 'Pendiente' }}</p>
+                <h3>Productos:</h3>
+                <ul>
+                    {% for datosPedido in pedido.productos %}
+                        <li>{{ datosPedido.producto.nombre }} - Cantidad: {{ datosPedido.unidades }}</li>
+                    {% endfor %}
+                </ul>
+                <p>Total: {{ pedido.totalPrecio }}€</p>
+                <hr>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
