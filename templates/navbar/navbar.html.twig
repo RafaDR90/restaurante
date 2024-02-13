@@ -5,6 +5,9 @@
             <ul class="navbar-nav gap-5">
                 {% if is_granted('ROLE_USER') %}
                     <li>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_pedido_mis_pedidos') }}">Mis pedidos</a>
+                    </li>
+                    <li>
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_categorias_index') }}">Categorias</a>
                     </li>
                     <li>
