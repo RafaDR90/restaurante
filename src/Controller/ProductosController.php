@@ -82,7 +82,7 @@ class ProductosController extends AbstractController
     public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager,$catId): Response
     {
         if ($this->isCsrfTokenValid('delete'.$producto->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($producto);
+            $producto->setStock(0);
             $entityManager->flush();
         }
 
