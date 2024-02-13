@@ -4,34 +4,40 @@
 
 {% block body %}
     <h1 class="text-center">Carrito</h1>
-    <table class="table">
-        <thead>
+    <div class="container">
+        <table class="table">
+            <thead>
             <tr>
                 <th>Producto</th>
                 <th>Cantidad</th>
-                <th>Acciones</th>
+                <th>Precio</th>
+                <th colspan="2">Acciones</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for item in productos %}
                 <tr>
                     <td>{{ item.getNombre() }}</td>
                     <td>{{ item.cantidad }}</td>
+                    <td>{{ item.getPrecio() }}€</td>
                     <td>
-                        <a href="{{ path('carrito_agregar', {'id': item.getId()}) }}" class="btn btn-primary">+</a>
-                        <a href="{{ path('carrito_quitar', {'id': item.getId()}) }}" class="btn btn-danger">-</a>
+                        <a href="{{ path('carrito_agregar', {'id': item.getId()}) }}" class="btn btn-primary me-2">+</a>
+                        <a href="{{ path('carrito_quitar', {'id': item.getId()}) }}" class="btn btn-danger me-2">-</a>
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-        <tfoot>
+            </tbody>
+            <tfoot>
             <tr>
-                <td colspan="3"><b>Total</b></td>
-                <td>{{ total }}</td>
-                <td>
-                    <a href="{{ path('carrito_comprar')}}" class="btn btn-success">Comprar</a>
-                </td>
+                <td colspan="1"><b>Total productos:</b> {{ total }}</td>
+                <td colspan="2"><b>Total precio</b></td>
+                <td colspan="2" style="background-color: #f0f0f0;">{{ totalPrecio }}€</td>
             </tr>
-        </tfoot>
-    </table>
+            </tfoot>
+        </table>
+        <div class="text-center">
+            <a href="{{ path('carrito_vaciar') }}" class="btn btn-danger me-2">Vaciar</a>
+            <a href="{{ path('carrito_comprar')}}" class="btn btn-success">Comprar</a>
+        </div>
+    </div>
 {% endblock %}
