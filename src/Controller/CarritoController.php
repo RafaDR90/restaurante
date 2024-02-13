@@ -91,6 +91,8 @@ class CarritoController extends AbstractController
             'productos' => $productos,
             'total' => $total,
             'totalPrecio' => $totalPrecio,
+            'error' => $_GET['error'] ?? null,
+            'exito' => $_GET['exito'] ?? null,
         ]);
     }
 
@@ -99,7 +101,7 @@ class CarritoController extends AbstractController
     {
         //vacía el carrito
         $session->set('cart', []);
-        return $this->redirectToRoute('app_carrito');
+        return $this->redirectToRoute('app_carrito',['exito'=>'Carrito vaciado correctamente']);
     }
 
     #[Route('/carrito/add/{id}', name: 'carrito_agregar')]
@@ -114,7 +116,7 @@ class CarritoController extends AbstractController
             $carrito[$id]++;
         //guarda el carrito en la sesion
         $session->set('cart', $carrito);
-        return $this->redirectToRoute('app_carrito');
+        return $this->redirectToRoute('app_carrito',['exito'=>'Producto añadido correctamente']);
     }
 
     #[Route('/carrito/remove/{id}', name: 'carrito_quitar')]
@@ -129,6 +131,6 @@ class CarritoController extends AbstractController
             $carrito[$id]--;
         //guarda el carrito en la sesion
         $session->set('cart', $carrito);
-        return $this->redirectToRoute('app_carrito');
+        return $this->redirectToRoute('app_carrito',['exito'=>'Producto restado correctamente']);
     }
 }

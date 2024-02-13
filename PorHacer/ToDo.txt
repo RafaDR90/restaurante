@@ -1,3 +1,5 @@
-- mostrar tus pedidos
+- Crear en la base de datos, que la primera sea "Sin Categoria" y que no se pueda borrar.
 
-- mostrar todos los pedidos si eres admin
+- Hacer que no se muestre la categoria "Sin Categoria"
+
+- Hacer que se puedan editar la categoria de los productos

@@ -4,23 +4,44 @@
 
 {% block body %}
     <div class="container">
-        <h1>Mis Pedidos</h1>
+        <h1 class="text-center mb-4">Mis Pedidos</h1>
 
         {% if pedidos is empty %}
-            <p>No tienes ningún pedido.</p>
+            <div class="alert alert-info" role="alert">
+                No tienes ningún pedido.
+            </div>
         {% else %}
             {% for pedido in pedidos %}
-                <h2>Pedido #{{ pedido.id }}</h2>
-                <p>Fecha: {{ pedido.fecha|date('Y-m-d') }}</p>
-                <p>Estado: {{ pedido.enviado ? 'Enviado' : 'Pendiente' }}</p>
-                <h3>Productos:</h3>
-                <ul>
-                    {% for datosPedido in pedido.productos %}
-                        <li>{{ datosPedido.producto.nombre }} - Cantidad: {{ datosPedido.unidades }}</li>
-                    {% endfor %}
-                </ul>
-                <p>Total: {{ pedido.totalPrecio }}€</p>
-                <hr>
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="card-title">Pedido #{{ pedido.id }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Fecha:</strong> {{ pedido.fecha|date('Y-m-d') }}</p>
+                        <p class="card-text"><strong>Estado:</strong> {% if pedido.enviado == 0 %}
+                                                                        {{ 'Pendiente' }}
+                                                                    {% elseif pedido.enviado == 1 %}
+                                                                        {{ 'Enviado' }}
+                                                                    {% elseif pedido.enviado == 2 %}
+                                                                        {{ 'Cancelado' }}
+                                                                    {% else %}
+                                                                        {{ 'Estado Desconocido' }}
+                                                                    {% endif %}</p>
+                        <h3 class="card-title">Productos:</h3>
+                        <ul class="list-group">
+                            {% for datosPedido in pedido.productos %}
+                                <li class="list-group-item">{{ datosPedido.producto.nombre }} - Cantidad: {{ datosPedido.unidades }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p class="card-text mt-3"><strong>Total:</strong> {{ pedido.totalPrecio }}€</p>
+                        <div class="mt-3">
+                            <form action="{{ path('marcar_cancelado_mipedido', {'id': pedido.id}) }}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger">Cancelar pedido</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         {% endif %}
     </div>

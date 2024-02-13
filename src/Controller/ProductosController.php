@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoriasRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Entity\Productos;
 use App\Form\ProductosType;
@@ -25,28 +26,32 @@ class ProductosController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($producto);
             $entityManager->flush();
-            return $this->redirectToRoute('app_productos_index', ['catId'=>$catId], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_productos_index', ['catId'=>$catId, 'exito'=>'Producto creado'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('productos/new.html.twig', [
             'producto' => $producto,
             'form' => $form,
             'catId' => $catId,
+
         ]);
     }
 
 
     #[Route('/', name: 'app_productos_index', methods: ['GET'])]
-    public function index(ProductosRepository $productosRepository,$catId): Response
+    public function index(ProductosRepository $productosRepository,CategoriasRepository $categoriaRepository,$catId ): Response
     {
+
         //obtengo nombre de la categoria
-        $catNombre=$productosRepository->find($catId)->getCategoria()->getNombre();
+        $catNombre=$categoriaRepository->find($catId)->getNombre();
         //obtiene productos con id de categoria
         $productos=$productosRepository->findBy(['categoria' => $catId]);
         return $this->render('productos/index.html.twig', [
             'productos' => $productos,
             'catId' => $catId,
             'nombre' => $catNombre,
+            'error' => $_GET['error'] ?? null,
+            'exito' => $_GET['exito'] ?? null,
         ]);
     }
 
@@ -68,7 +73,7 @@ class ProductosController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_productos_index', ['catId'=>$catId], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_productos_index', ['catId'=>$catId,'exito'=>'Producto editado'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('productos/edit.html.twig', [
@@ -86,7 +91,7 @@ class ProductosController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_productos_index', ['catId'=>$catId], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_productos_index', ['catId'=>$catId, 'exito'=>'Producto eliminado'], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/add', name: 'app_productos_addCart', methods: ['GET'])]
@@ -105,7 +110,7 @@ class ProductosController extends AbstractController
             $cart[$id] = 1;
         }
         $session->set('cart', $cart);
-        return $this->redirectToRoute('app_productos_index', ['catId'=>$producto->getCategoria()->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_carrito', ['catId'=>$producto->getCategoria()->getId()], Response::HTTP_SEE_OTHER);
     }
 
 }

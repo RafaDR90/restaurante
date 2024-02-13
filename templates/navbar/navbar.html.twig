@@ -33,6 +33,18 @@
         </div>
     </nav>
 
+    {% if error is defined and error is not empty %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    {% if exito is defined and exito is not empty %}
+        <div class="alert alert-success" role="alert">
+            {{ exito }}
+        </div>
+    {% endif %}
+
+
     <style>
 
         .navbar-nav li:hover {

@@ -38,6 +38,8 @@ class CategoriasController extends AbstractController
         }else{
             return $this->render('categorias/index.html.twig', [
                 'categorias' => $categoriasRepository->findAll(),
+                'error' => $_GET['error'] ?? null,
+                'exito' => $_GET['exito'] ?? null,
             ]);
         }
     }
@@ -53,7 +55,7 @@ class CategoriasController extends AbstractController
             $entityManager->persist($categoria);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_categorias_index', ['exito'=>'Categoria creada'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('categorias/new.html.twig', [
@@ -79,7 +81,7 @@ class CategoriasController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_categorias_index', ['exito'=>'Categoria editada'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('categorias/edit.html.twig', [
@@ -92,11 +94,17 @@ class CategoriasController extends AbstractController
     public function delete(Request $request, Categorias $categoria, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$categoria->getId(), $request->request->get('_token'))) {
+            // pone todos los productos con nombre "Sin Categoria"
+            $productos = $categoria->getProductos();
+            foreach ($productos as $producto) {
+                $producto->setCategoria($entityManager->getReference(Categorias::class, 1));
+            }
+            $entityManager->flush();
             $entityManager->remove($categoria);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_categorias_index', ['exito'=>'Categoria eliminada'], Response::HTTP_SEE_OTHER);
     }
 
 

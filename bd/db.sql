@@ -3,6 +3,7 @@ show tables ;
 select * from restaurante;
 select * from pedidos;
 select * from productos;
+select * from categorias;
 delete from restaurante;
 describe restaurante;
 UPDATE restaurante SET roles = '["ROLE_ADMIN"]' WHERE id = 9;
