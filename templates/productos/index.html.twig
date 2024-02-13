@@ -19,6 +19,7 @@
         </thead>
         <tbody>
         {% for producto in productos %}
+            {% if producto.stock != 0 %}
             <tr>
                 <td>{{ producto.id }}</td>
                 <td>{{ producto.nombre }}</td>
@@ -32,9 +33,10 @@
                         carrito</a>
                 </td>
             </tr>
+            {% endif %}
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="6">No hay productos</td>
             </tr>
         {% endfor %}
         </tbody>

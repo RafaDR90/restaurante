@@ -135,7 +135,7 @@ class EmailController extends AbstractController
                     <p class="text-totales"><b>Total de productos:</b> ' . $totalProductos . '</p>
                     <p class="text-totales"><b>Precio total:</b> ' . $totalPrecio . '€</p>
                 </div> 
-                <h1>!Gracias por su compra¡</h1>
+                <h1>¡Gracias por su compra!</h1>
             </div>
         </body>
     </html>';
