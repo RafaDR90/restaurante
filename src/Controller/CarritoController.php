@@ -2,15 +2,14 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Routing\Attribute\Route;
-use App\Entity\Productos;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Entity\Pedidos;
+use App\Entity\DatosPedido;
 use App\Repository\ProductosRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Controller\EmailController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 
 class CarritoController extends AbstractController
@@ -19,7 +18,6 @@ class CarritoController extends AbstractController
     #[Route('/carrito_comprar', name: 'carrito_comprar')]
     public function carrito_comprar( SessionInterface $session, ProductosRepository $productosRepository, EntityManagerInterface $entityManager,EmailController $emailController)
     {
-
         //compruba que hay stock de todos los productos de la sesion cart
         $carrito = $session->get('cart', []);
         $productos_id = array_keys($carrito);
@@ -37,8 +35,25 @@ class CarritoController extends AbstractController
             //guarda los cambios en la base de datos
             $entityManager->flush();
 
+            //crea un nuevo pedido
+            $pedido = new Pedidos();
+            $pedido->setFecha(new \DateTime());
+            $pedido->setRestaurante($this->getUser());
+            $pedido->setEnviado(0);
+            //drea pedidos productos
+            foreach ($productos as $producto) {
+                $pedidoProducto = new DatosPedido();
+                $pedidoProducto->setPedido($pedido);
+                $pedidoProducto->setProducto($producto);
+                $pedidoProducto->setUnidades($carrito[$producto->getId()]);
+                $entityManager->persist($pedidoProducto);
+            }
+            $entityManager->persist($pedido);
+            $entityManager->flush();
+
             //vacía el carrito
             $session->set('cart', []);
+
             //envia el email
             $htmlContent = $emailController->crearHTML($productos);
             $emailController->sendEmail($htmlContent);
@@ -48,8 +63,7 @@ class CarritoController extends AbstractController
         }
     }
 
-    #[
-        Route('/carrito', name: 'app_carrito')]
+    #[Route('/carrito', name: 'app_carrito')]
     public function index(SessionInterface $session, ProductosRepository $productosRepository): Response
     {
         //obtiene los id de productos de la sesion
@@ -78,6 +92,14 @@ class CarritoController extends AbstractController
             'total' => $total,
             'totalPrecio' => $totalPrecio,
         ]);
+    }
+
+    #[Route('/carrito/vaciar', name: 'carrito_vaciar')]
+    public function vaciar(SessionInterface $session): Response
+    {
+        //vacía el carrito
+        $session->set('cart', []);
+        return $this->redirectToRoute('app_carrito');
     }
 
     #[Route('/carrito/add/{id}', name: 'carrito_agregar')]
