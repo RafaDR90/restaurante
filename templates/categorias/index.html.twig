@@ -17,15 +17,22 @@
             </thead>
             <tbody>
             {% for categoria in categorias %}
-                <tr>
-                    <td>{{ categoria.id }}</td>
-                    <td>{{ categoria.nombre }}</td>
-                    <td>{{ categoria.descripcion }}</td>
-                    <td>
-                        <a class="btn-editar" href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">Editar</a>
-                        <a class="btn-ver-productos" href="{{ path('app_categorias_acceso', {'id': categoria.id}) }}">Ver productos</a>
-                    </td>
-                </tr>
+
+
+                {% if categoria.id != 1 or is_granted('ROLE_ADMIN') %}
+                    <tr>
+                        <td>{{ categoria.id }}</td>
+                        <td>{{ categoria.nombre }}</td>
+                        <td>{{ categoria.descripcion }}</td>
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="btn-editar" href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">Editar</a>
+                            {% endif %}
+                            <a class="btn-ver-productos"
+                               href="{{ path('app_categorias_acceso', {'id': categoria.id}) }}">Ver productos</a>
+                        </td>
+                    </tr>
+                {% endif %}
             {% else %}
                 <tr>
                     <td colspan="4">No se encontraron registros</td>
@@ -33,9 +40,11 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="crearCategoria d-flex justify-content-center">
-            <a class="btn-crear" href="{{ path('app_categorias_new') }}">Crear nueva categoría</a>
-        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="crearCategoria d-flex justify-content-center">
+                <a class="btn-crear" href="{{ path('app_categorias_new') }}">Crear nueva categoría</a>
+            </div>
+        {% endif %}
     </div>
 
     <style>

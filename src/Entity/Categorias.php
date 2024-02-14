@@ -24,6 +24,19 @@ class Categorias
     #[ORM\OneToMany(targetEntity: Productos::class, mappedBy: 'categoria')]
     private Collection $productos;
 
+    /**
+     * @ORM\PostLoad()
+     */
+    public function ensureDefaultCategory(): void
+    {
+        // Si no hay categorías en la base de datos, se crea la categoría "Sin categoría"
+        if ($this->id === 1 && $this->nombre === null && empty($this->productos)) {
+            $this->nombre = "Sin categoría";
+            // Puedes definir una descripción predeterminada si lo deseas
+            $this->descripcion = "Categoría predeterminada para productos sin categoría asignada.";
+        }
+    }
+
     public function __construct()
     {
         $this->productos = new ArrayCollection();

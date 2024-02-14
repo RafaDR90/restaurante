@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\RestauranteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,13 +16,14 @@ use App\Repository\PedidosRepository;
 class PedidoController extends AbstractController
 {
     #[Route('/pedido', name: 'app_pedido')]
-    public function index(PedidosRepository $pedidosRepository, DatosPedidoRepository $datosPedidoRepository): Response
+    public function index(PedidosRepository $pedidosRepository, DatosPedidoRepository $datosPedidoRepository,RestauranteRepository $restauranteRepository): Response
     {
         //comprueba que soy admin con isGranted sino redirigo a categorias
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_categorias_index');
         }
-        $pedidos = $pedidosRepository->findAll();
+
+        $pedidos = $pedidosRepository->findBy([], ['id' => 'desc']);
 
         foreach ($pedidos as $pedido) {
             $productos = $datosPedidoRepository->findBy(['pedido' => $pedido->getId()]);
@@ -34,6 +36,12 @@ class PedidoController extends AbstractController
             }
             $pedido->totalPrecio = $totalPrecio;
             $totalPrecio = 0;
+        }
+        //añadi a pedido su usuario
+        foreach ($pedidos as $pedido) {
+            $usuarioId = $pedido->getRestaurante();
+            $usuario = $restauranteRepository->find($usuarioId);
+            $pedido->usuario = $usuario->getEmail();
         }
 
         return $this->render('pedido/index.html.twig', [
@@ -52,7 +60,8 @@ class PedidoController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $pedidos = $pedidosRepository->findBy(['restaurante' => $this->getUser()]);
+        $pedidos = $pedidosRepository->findBy(['restaurante' => $this->getUser()->getId()], ['id' => 'desc']);
+
 
         foreach ($pedidos as $pedido) {
             $productos = $datosPedidoRepository->findBy(['pedido' => $pedido->getId()]);

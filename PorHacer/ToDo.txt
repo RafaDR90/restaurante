@@ -1,7 +1,5 @@
-- Crear en la base de datos, que la primera sea "Sin Categoria" y que no se pueda borrar.
 
-- Hacer que no se muestre la categoria "Sin Categoria"
 
-- Hacer que se puedan editar la categoria de los productos
 
-- Cambiar el logo de restaurante por el de la empresa
+
+

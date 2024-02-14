@@ -14,10 +14,9 @@
             {% for pedido in pedidos %}
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h2 class="card-title">Pedido #{{ pedido.id }}</h2>
+                        <h2 class="card-title">Pedido {{ pedido.fecha|date('Y-m-d') }}</h2>
                     </div>
                     <div class="card-body">
-                        <p class="card-text"><strong>Fecha:</strong> {{ pedido.fecha|date('Y-m-d') }}</p>
                         <p class="card-text"><strong>Estado:</strong> {% if pedido.enviado == 0 %}
                                                                         {{ 'Pendiente' }}
                                                                     {% elseif pedido.enviado == 1 %}

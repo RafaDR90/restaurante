@@ -27,9 +27,9 @@ class ProductosType extends AbstractType
                 'class' => Categorias::class,
                 'choice_label' => 'nombre', // Cambia 'id' al campo que deseas mostrar
                 'query_builder' => function (EntityRepository $er) use ($catId) {
-                    return $er->createQueryBuilder('c')
-                        ->andWhere('c.id = :catId')
-                        ->setParameter('catId', $catId);
+                    return $er->createQueryBuilder('c');
+                       // ->andWhere('c.id = :catId')
+                        //->setParameter('catId', $catId); Lo he comentado para que me salgan todas las categorias
                 },
             ]);
     }

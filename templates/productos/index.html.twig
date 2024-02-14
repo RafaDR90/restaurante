@@ -19,20 +19,24 @@
             </thead>
             <tbody>
             {% for producto in productos %}
-                {% if producto.stock != 0 %}
-                <tr>
-                    <td>{{ producto.id }}</td>
-                    <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.descripcion }}</td>
-                    <td>{{ producto.peso }}</td>
-                    <td>{{ producto.stock }}</td>
-                    <td>{{ producto.precio }}</td>
-                    <td>
-                        <a class="btn-editar" href="{{ path('app_productos_edit', {'id': producto.id, 'catId': catId}) }}">Editar</a>
-                        <a class="btn-ver-productos" href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al
-                            carrito</a>
-                    </td>
-                </tr>
+                {% if producto.stock != 0 or is_granted('ROLE_ADMIN') %}
+                    <tr>
+                        <td>{{ producto.id }}</td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.descripcion }}</td>
+                        <td>{{ producto.peso }}</td>
+                        <td>{{ producto.stock }}</td>
+                        <td>{{ producto.precio }}</td>
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="btn-editar"
+                                   href="{{ path('app_productos_edit', {'id': producto.id, 'catId': catId}) }}">Editar</a>
+                            {% endif %}
+                            <a class="btn-ver-productos"
+                               href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al
+                                carrito</a>
+                        </td>
+                    </tr>
                 {% endif %}
             {% else %}
                 <tr>
@@ -41,10 +45,11 @@
             {% endfor %}
             </tbody>
         </table>
-
-       <div class="crearCategoria d-flex justify-content-center">
-            <a class="btn-crear" href="{{ path('app_productos_new',{'catId': catId}) }}">Crear nuevo producto</a>
-       </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="crearCategoria d-flex justify-content-center">
+                <a class="btn-crear" href="{{ path('app_productos_new',{'catId': catId}) }}">Crear nuevo producto</a>
+            </div>
+        {% endif %}
     </div>
 
     <style>
