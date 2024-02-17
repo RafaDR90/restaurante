@@ -6,16 +6,17 @@
     <div class="container">
         <h1 class="text-center mb-4">Productos</h1>
 
-        <form action="{{ path('app_product', {'catId': 0}) }}" method="post">
+        <form class="d-flex justify-content-center flex-column" action="{{ path('app_product', {'catId': 0}) }}" method="post" data-turbo="false">
 
+            <label for="categoria" class="fs-2 fw-bold text-center">Categoría</label>
+            <div class="form-group d-flex gap-1 align-items-center justify-content-center">
 
-        <div class="form-group">
-                <label for="categoria">Categoría</label>
-                <select class="form-control" name="categoria" id="categoria">
+                <select class="form-control w-25 mb-1" name="categoria" id="categoria">
                     <option value="">Todas</option>
-                    {% for categoria in categorias %}
+                    {% for categoria in options %}
                         {% if is_granted('ROLE_ADMIN') or categoria.id != 1 and categoria.productos|length > 0 %}
-                            <option value="{{ categoria.id }}" {% if categoria.id == app.request.query.get('categoria') %}selected{% endif %}>{{ categoria.nombre }}</option>
+                            <option value="{{ categoria.id }}"
+                                    {% if categoria.id == selectedCategoriaId %}selected{% endif %}>{{ categoria.nombre }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -23,7 +24,13 @@
             </div>
         </form>
         {% for categoria in categorias %}
-            {% if categoria.productos|length > 0 and categoria.id != 1 %}
+            {% set hayStock = false %}
+            {% for producto in categoria.productos %}
+                {% if producto.stock > 0 %}
+                    {% set hayStock = true %}
+                {% endif %}
+            {% endfor %}
+            {% if categoria.id != 1 and hayStock %}
                 <h2>{{ categoria.nombre }}</h2>
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -39,6 +46,7 @@
                         </thead>
                         <tbody>
                         {% for producto in categoria.productos %}
+                            {% if producto.stock > 0 %}
                             <tr>
                                 <td>{{ producto.nombre }}</td>
                                 <td>{{ producto.descripcion }}</td>
@@ -46,21 +54,18 @@
                                 <td>{{ producto.stock }}</td>
                                 <td>{{ producto.precio }}€</td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="{{ path('app_productos_addCart',{'id':producto.id,'catId': categoria.id}) }}">Añadir al carrito</a>
-                                    <a class="btn btn-info btn-sm" href="{{ path('app_productos_edit', {'id': producto.id, 'catId': categoria.id}) }}">Editar</a>
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{{ path('app_productos_addCart',{'id':producto.id,'catId': categoria.id}) }}">Añadir
+                                        al carrito</a>
                                 </td>
                             </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% endif %}
         {% endfor %}
-        {% if is_granted('ROLE_ADMIN') %}
-            <div class="d-flex justify-content-center mt-4">
-                <a class="btn btn-success" href="#">Añadir nuevo producto</a>
-            </div>
-        {% endif %}
     </div>
 
     <style>

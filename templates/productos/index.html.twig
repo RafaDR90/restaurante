@@ -32,9 +32,7 @@
                                 <a class="btn-editar"
                                    href="{{ path('app_productos_edit', {'id': producto.id, 'catId': catId}) }}">Editar</a>
                             {% endif %}
-                            <a class="btn-ver-productos"
-                               href="{{ path('app_productos_addCart',{'id':producto.id,'catId': catId}) }}">Añadir al
-                                carrito</a>
+
                         </td>
                     </tr>
                 {% endif %}

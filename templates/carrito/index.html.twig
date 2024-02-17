@@ -37,7 +37,9 @@
         </table>
         <div class="text-center">
             <a href="{{ path('carrito_vaciar') }}" class="btn btn-danger me-2">Vaciar</a>
-            <a href="{{ path('carrito_comprar')}}" class="btn btn-success">Comprar</a>
+            {% if productos|length > 0 %}
+                <a href="{{ path('carrito_comprar') }}" class="btn btn-success">Comprar</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

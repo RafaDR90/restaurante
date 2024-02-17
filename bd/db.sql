@@ -11,8 +11,8 @@ delete from restaurante;
 describe restaurante;
 UPDATE restaurante SET roles = '["ROLE_ADMIN"]' WHERE id = 9;
 
-INSERT INTO restaurante (email, roles, password, cp, ciudad, direccion)
-VALUES ('rafa18220delgado@gmail.com', '["ROLE_ADMIN"]', '$2y$13$iD9L840Kt10mfQRi8ACZve6mswmCch2/dpISjIw.RmVO2fxLomsp2', '18220', 'ciudad peligros', 'calle pepito');
+INSERT INTO restaurante (email, roles, password, cp,pais, ciudad, direccion)
+VALUES ('rafa18220delgado@gmail.com', '["ROLE_ADMIN"]', '$2y$13$iD9L840Kt10mfQRi8ACZve6mswmCch2/dpISjIw.RmVO2fxLomsp2', '18220','españa', 'ciudad peligros', 'calle pepito');
 # el pw es rafarafa
 
 select * from categorias;

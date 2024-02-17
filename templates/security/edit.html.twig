@@ -10,7 +10,7 @@
                     <div class="card-body">
                         <h1 class="card-title text-center mb-4">Editar Usuario</h1>
 
-                        {{ form_start(form) }}
+                        {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
 
                         <div class="mb-3">
                             {{ form_label(form.password, 'Contraseña', {'label_attr': {'class': 'form-label'}}) }}
@@ -42,6 +42,7 @@
                         </div>
 
                         {{ form_end(form) }}
+
                     </div>
                 </div>
             </div>

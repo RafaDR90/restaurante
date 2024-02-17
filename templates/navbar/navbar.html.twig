@@ -8,16 +8,13 @@
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_pedido_mis_pedidos') }}">Mis pedidos</a>
                     </li>
                     <li>
-                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_categorias_index') }}">Categorias</a>
-                    </li>
-                    <li>
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_product', {'catId': 0}) }}">Productos</a>
                     </li>
                     <li>
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_carrito') }}">Carrito</a>
                     </li>
                     <li>
-                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('user_edit', {'id': 1}) }}">Editar Perfil</a>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('user_edit', {'id': app.user.id}) }}">Editar Perfil</a>
                     </li>
 
                     <li>
@@ -29,6 +26,9 @@
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
+                    <li>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_categorias_index') }}">Gestión</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_register') }}">Registrar</a>
                     </li>

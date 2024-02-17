@@ -17,60 +17,68 @@ use Symfony\Component\Routing\Attribute\Route;
 class ProductosController extends AbstractController
 {
     #[Route('/products', name: 'app_product', methods: ['GET', 'POST'])]
-    public function products(ProductosRepository $productosRepository,CategoriasRepository $categoriaRepository)
+    public function products(ProductosRepository $productosRepository, CategoriasRepository $categoriaRepository, Request $request)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['categoria'])) {
-            $productos=$productosRepository->findBy(['categoria' => $_POST['categoria']]);
-            $categorias=$categoriaRepository->findBy(['id' => $_POST['categoria']]);
-        } else {
-
-            $productos=$productosRepository->findAll();
-            $categorias=$categoriaRepository->findAll();
+        $categoriaId = $request->request->get('categoria');
+        if ($request->isMethod('POST') && $categoriaId !== null) {
+            // Si se envió una categoría, buscar productos y categorías basadas en el ID de la categoría
+            if (!empty($categoriaId)){
+                $categorias = $categoriaRepository->findBy(['id' => $categoriaId]);
+            }else{
+                $categorias = $categoriaRepository->findAll();
+            }
+        }else{
+            $categorias = $categoriaRepository->findAll();
         }
-
+        $options = $categoriaRepository->findAll();
 
 
         return $this->render('productos/products.html.twig', [
-            'productos' => $productos,
             'categorias' => $categorias,
             'error' => $_GET['error'] ?? null,
             'exito' => $_GET['exito'] ?? null,
+            'selectedCategoriaId' => $categoriaId,
+            'options' => $options,
+            'catId' => 0,
         ]);
 
     }
+
     #[Route('/new', name: 'app_productos_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,$catId): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes','catId'=>0]);
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes', 'catId' => 0]);
         }
         $producto = new Productos();
-        $form = $this->createForm(ProductosType::class, $producto, ['catId' => $catId]);
+        $form = $this->createForm(ProductosType::class, $producto);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($producto);
             $entityManager->flush();
-            return $this->redirectToRoute('app_productos_index', ['catId'=>$catId, 'exito'=>'Producto creado'], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_productos_index', ['catId' => $catId, 'exito' => 'Producto creado'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('productos/new.html.twig', [
             'producto' => $producto,
             'form' => $form,
-            'catId' => $catId,
+            'catId' => $catId
 
         ]);
     }
 
 
     #[Route('/', name: 'app_productos_index', methods: ['GET'])]
-    public function index(ProductosRepository $productosRepository,CategoriasRepository $categoriaRepository,$catId ): Response
+    public function index(ProductosRepository $productosRepository, CategoriasRepository $categoriaRepository, $catId): Response
     {
-
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes', 'catId' => 0]);
+        }
         //obtengo nombre de la categoria
-        $catNombre=$categoriaRepository->find($catId)->getNombre();
+        $catNombre = $categoriaRepository->find($catId)->getNombre();
         //obtiene productos con id de categoria
-        $productos=$productosRepository->findBy(['categoria' => $catId]);
+        $productos = $productosRepository->findBy(['categoria' => $catId]);
         return $this->render('productos/index.html.twig', [
             'productos' => $productos,
             'catId' => $catId,
@@ -82,10 +90,10 @@ class ProductosController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'app_productos_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Productos $producto, EntityManagerInterface $entityManager,$catId): Response
+    public function edit(Request $request, Productos $producto, EntityManagerInterface $entityManager, $catId): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes','catId'=>0]);
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes', 'catId' => 0]);
         }
         $form = $this->createForm(ProductosType::class, $producto, ['catId' => $catId]);
         $form->handleRequest($request);
@@ -93,7 +101,7 @@ class ProductosController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_productos_index', ['catId'=>$catId,'exito'=>'Producto editado'], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_productos_index', ['catId' => $catId, 'exito' => 'Producto editado'], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('productos/edit.html.twig', [
@@ -104,17 +112,17 @@ class ProductosController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_productos_delete', methods: ['POST'])]
-    public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager,$catId): Response
+    public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager, $catId): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes','catId'=>0]);
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes', 'catId' => 0]);
         }
-        if ($this->isCsrfTokenValid('delete'.$producto->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $producto->getId(), $request->request->get('_token'))) {
             $producto->setStock(0);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_productos_index', ['catId'=>$catId, 'exito'=>'Producto eliminado'], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_productos_index', ['catId' => $catId, 'exito' => 'Producto eliminado'], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/add', name: 'app_productos_addCart', methods: ['GET'])]
@@ -125,15 +133,15 @@ class ProductosController extends AbstractController
         $id = $producto->getId();
         if (!empty($cart[$id])) {
             //comprueba que exista stock para añadir uno mas
-            if($cart[$id]<$producto->getStock())
-            $cart[$id]++;
+            if ($cart[$id] < $producto->getStock())
+                $cart[$id]++;
         } else {
             //comprueba que exista stock para añadir uno
-            if($producto->getStock()>0)
-            $cart[$id] = 1;
+            if ($producto->getStock() > 0)
+                $cart[$id] = 1;
         }
         $session->set('cart', $cart);
-        return $this->redirectToRoute('app_carrito', ['catId'=>$producto->getCategoria()->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_carrito', ['catId' => $producto->getCategoria()->getId()], Response::HTTP_SEE_OTHER);
     }
 
 }

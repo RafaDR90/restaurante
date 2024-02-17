@@ -28,7 +28,7 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
         if ($this->getUser())
-        return $this->redirectToRoute('app_categorias_index');
+        return $this->redirectToRoute('app_product', ['catId' => 0]);
         else
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
@@ -64,6 +64,13 @@ class SecurityController extends AbstractController
 
                 // Verificar si la nueva contraseña está vacía
                 if ($newPassword !== null) {
+                    if (strlen($newPassword)<6){
+                        $error = "La contraseña debe tener al menos 6 caracteres";
+                        return $this->render('security/edit.html.twig', [
+                            'form' => $form->createView(),
+                            'error' => $error ?? null,
+                        ]);
+                    }
                     // Codificar la nueva contraseña
                     $encodedPassword = $userPasswordHasher->hashPassword($restaurante, $newPassword);
 
@@ -75,9 +82,9 @@ class SecurityController extends AbstractController
                 }
 
                 // Guardar los cambios en la base de datos
-                $exito = "Cambios guardados con éxito";
+
                 $entityManager->flush();
-                return $this->redirectToRoute('app_categorias_index', ['exito'=>$exito,'error'=>$error??null]);
+                return $this->redirectToRoute('user_edit', ['exito'=>"Cambios guardados con éxito",'error'=>$error??null,'id'=>$restaurante->getId()]);
             }
         }
 
