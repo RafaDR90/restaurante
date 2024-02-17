@@ -77,7 +77,7 @@ class SecurityController extends AbstractController
                 // Guardar los cambios en la base de datos
                 $exito = "Cambios guardados con éxito";
                 $entityManager->flush();
-                return $this->redirectToRoute('app_categorias_index', ['exito'=>$exito]);
+                return $this->redirectToRoute('app_categorias_index', ['exito'=>$exito,'error'=>$error??null]);
             }
         }
 

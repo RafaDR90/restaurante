@@ -13,11 +13,6 @@
                         {{ form_start(form) }}
 
                         <div class="mb-3">
-                            {{ form_label(form.email, 'Correo electrónico', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-
-                        <div class="mb-3">
                             {{ form_label(form.password, 'Contraseña', {'label_attr': {'class': 'form-label'}}) }}
                             {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
                         </div>
@@ -25,6 +20,21 @@
                         <div class="mb-3">
                             {{ form_label(form.direccion, 'Dirección', {'label_attr': {'class': 'form-label'}}) }}
                             {{ form_widget(form.direccion, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.cp, 'CP', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.cp, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.ciudad, 'Ciudad', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.ciudad, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.pais, 'Pais', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.pais, {'attr': {'class': 'form-control'}}) }}
                         </div>
 
                         <div class="text-center">

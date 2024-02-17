@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EditarPerfilType extends AbstractType
 {
@@ -20,17 +22,34 @@ class EditarPerfilType extends AbstractType
         $restaurante = $options['data'];
 
         $builder
-            ->add('email', EmailType::class, [
-                'label' => 'Correo electrónico'
-            ])
-            // Quiero hacer que si el campo de la contraseña esta vacio no se intente cambiar
             ->add('password', PasswordType::class, [
                 'label' => 'Contraseña',
                 'required' => false,
                 'mapped' => false,
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a password',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
             ])
             ->add('direccion', TextType::class, [
                 'label' => 'Dirección'
+            ])
+            ->add('cp', TextType::class, [
+                'label' => 'Código Postal'
+            ])
+            ->add('ciudad', TextType::class, [
+                'label' => 'Ciudad'
+            ])
+            ->add('pais', TextType::class, [
+                'label' => 'País'
             ]);
     }
 
