@@ -19,10 +19,11 @@ class ProductosController extends AbstractController
     #[Route('/products', name: 'app_product', methods: ['GET', 'POST'])]
     public function products(ProductosRepository $productosRepository,CategoriasRepository $categoriaRepository)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['categoriaId'])) {
-            $productos=$productosRepository->findBy(['categoria' => $_POST['categoriaId']]);
-            $categorias=$categoriaRepository->findBy(['id' => $_POST['categoriaId']]);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['categoria'])) {
+            $productos=$productosRepository->findBy(['categoria' => $_POST['categoria']]);
+            $categorias=$categoriaRepository->findBy(['id' => $_POST['categoria']]);
         } else {
+
             $productos=$productosRepository->findAll();
             $categorias=$categoriaRepository->findAll();
         }

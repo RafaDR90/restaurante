@@ -15,7 +15,7 @@
                     <option value="">Todas</option>
                     {% for categoria in categorias %}
                         {% if is_granted('ROLE_ADMIN') or categoria.id != 1 and categoria.productos|length > 0 %}
-                            <option value="{{ categoria.id }}" {% if categoria.id == app.request.query.get('categoriaId') %}selected{% endif %}>{{ categoria.nombre }}</option>
+                            <option value="{{ categoria.id }}" {% if categoria.id == app.request.query.get('categoria') %}selected{% endif %}>{{ categoria.nombre }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
