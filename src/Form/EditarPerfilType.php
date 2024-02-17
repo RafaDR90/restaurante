@@ -31,9 +31,6 @@ class EditarPerfilType extends AbstractType
             ])
             ->add('direccion', TextType::class, [
                 'label' => 'Dirección'
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Guardar cambios'
             ]);
     }
 
