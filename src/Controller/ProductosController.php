@@ -16,9 +16,33 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/categorias/{catId}/productos')]
 class ProductosController extends AbstractController
 {
+    #[Route('/products', name: 'app_product', methods: ['GET', 'POST'])]
+    public function products(ProductosRepository $productosRepository,CategoriasRepository $categoriaRepository)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['categoriaId'])) {
+            $productos=$productosRepository->findBy(['categoria' => $_POST['categoriaId']]);
+            $categorias=$categoriaRepository->findBy(['id' => $_POST['categoriaId']]);
+        } else {
+            $productos=$productosRepository->findAll();
+            $categorias=$categoriaRepository->findAll();
+        }
+
+
+
+        return $this->render('productos/products.html.twig', [
+            'productos' => $productos,
+            'categorias' => $categorias,
+            'error' => $_GET['error'] ?? null,
+            'exito' => $_GET['exito'] ?? null,
+        ]);
+
+    }
     #[Route('/new', name: 'app_productos_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,$catId): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes','catId'=>0]);
+        }
         $producto = new Productos();
         $form = $this->createForm(ProductosType::class, $producto, ['catId' => $catId]);
         $form->handleRequest($request);
@@ -56,17 +80,12 @@ class ProductosController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_productos_show', methods: ['GET'])]
-    public function show(Productos $producto): Response
-    {
-        return $this->render('productos/show.html.twig', [
-            'producto' => $producto,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_productos_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Productos $producto, EntityManagerInterface $entityManager,$catId): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes','catId'=>0]);
+        }
         $form = $this->createForm(ProductosType::class, $producto, ['catId' => $catId]);
         $form->handleRequest($request);
 
@@ -86,6 +105,9 @@ class ProductosController extends AbstractController
     #[Route('/{id}', name: 'app_productos_delete', methods: ['POST'])]
     public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager,$catId): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_product', ['error' => 'Permisos insuficientes','catId'=>0]);
+        }
         if ($this->isCsrfTokenValid('delete'.$producto->getId(), $request->request->get('_token'))) {
             $producto->setStock(0);
             $entityManager->flush();

@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Productos {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center mb-4">Productos</h1>
+
+        <form action="{{ path('app_product', {'catId': 0}) }}" method="post">
+
+
+        <div class="form-group">
+                <label for="categoria">Categoría</label>
+                <select class="form-control" name="categoria" id="categoria">
+                    <option value="">Todas</option>
+                    {% for categoria in categorias %}
+                        {% if is_granted('ROLE_ADMIN') or categoria.id != 1 and categoria.productos|length > 0 %}
+                            <option value="{{ categoria.id }}" {% if categoria.id == app.request.query.get('categoriaId') %}selected{% endif %}>{{ categoria.nombre }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <input type="submit" class="btn btn-primary" value="Filtrar">
+            </div>
+        </form>
+        {% for categoria in categorias %}
+            {% if categoria.productos|length > 0 and categoria.id != 1 %}
+                <h2>{{ categoria.nombre }}</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Peso</th>
+                            <th>Stock</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for producto in categoria.productos %}
+                            <tr>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.descripcion }}</td>
+                                <td>{{ producto.peso }}</td>
+                                <td>{{ producto.stock }}</td>
+                                <td>{{ producto.precio }}€</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="{{ path('app_productos_addCart',{'id':producto.id,'catId': categoria.id}) }}">Añadir al carrito</a>
+                                    <a class="btn btn-info btn-sm" href="{{ path('app_productos_edit', {'id': producto.id, 'catId': categoria.id}) }}">Editar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="d-flex justify-content-center mt-4">
+                <a class="btn btn-success" href="#">Añadir nuevo producto</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <style>
+        .btn {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+{% endblock %}
