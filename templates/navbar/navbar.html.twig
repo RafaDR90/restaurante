@@ -14,6 +14,9 @@
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_carrito') }}">Carrito</a>
                     </li>
                     <li>
+                        <a class="nav-link text-light fs-5 fw-bold" href="{{ path('user_edit', {'id': 1}) }}">Editar Perfil</a>
+                    </li>
+                    <li>
                         <a class="nav-link text-light fs-5 fw-bold" href="{{ path('app_logout') }}">Cerrar Sesión</a>
                     </li>
                 {% else %}
