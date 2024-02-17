@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Restaurante;
+use App\Form\EditarPerfilType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -36,4 +41,52 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    /**
+     * @Route("/user/{id}/edit", name="user_edit")
+     */
+    #[Route(path: '/user/{id}/edit', name: 'user_edit')]
+    public function edit(Request $request, Restaurante $restaurante, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        // Obtener la contraseña original
+        $originalPassword = $restaurante->getPassword();
+
+        // Crear el formulario con el objeto Restaurante
+        $form = $this->createForm(EditarPerfilType::class, $restaurante);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if(!$form->isValid()){
+                $error = "Error al guardar los cambios";
+            } else {
+                // Obtener la contraseña del formulario
+                $newPassword = $form->get('password')->getData();
+
+                // Verificar si la nueva contraseña está vacía
+                if ($newPassword !== null) {
+                    // Codificar la nueva contraseña
+                    $encodedPassword = $userPasswordHasher->hashPassword($restaurante, $newPassword);
+
+                    // Establecer la nueva contraseña codificada
+                    $restaurante->setPassword($encodedPassword);
+                } else {
+                    // Restaurar la contraseña original
+                    $restaurante->setPassword($originalPassword);
+                }
+
+                // Guardar los cambios en la base de datos
+                $exito = "Cambios guardados con éxito";
+                $entityManager->flush();
+                return $this->redirectToRoute('app_categorias_index', ['exito'=>$exito]);
+            }
+        }
+
+        // Renderizar el formulario
+        return $this->render('security/edit.html.twig', [
+            'form' => $form->createView(),
+            'error' => $error ?? null,
+            'exito' => $exito ?? null,
+        ]);
+    }
+
 }
